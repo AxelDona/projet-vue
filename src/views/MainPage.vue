@@ -1,7 +1,7 @@
 <template>
-
+  <div class="container page-container">
     <AllCards/>
-
+  </div>
 </template>
 
 <script>

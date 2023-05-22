@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{name: 'Joueur', params: {id: id, title: firstnameShort}}" class="player-card-link">
+  <router-link :id="id" :to="{name: 'Joueur', params: {id: id, title: firstnameShort}}" class="player-card-link">
     <div class="player-card">
       <div class="player-name-container">
         <span class="player-firstName">{{firstnameShort}}</span>

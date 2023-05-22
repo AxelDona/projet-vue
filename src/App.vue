@@ -1,6 +1,10 @@
 <template>
   <MainHeader/>
-  <router-view :key="$route.path"></router-view>
+
+    <Transition name="page">
+        <router-view :key="$route.path"></router-view>
+    </Transition>
+
 </template>
 
 <script>
@@ -22,13 +26,80 @@ export default {
   padding: 0;
 }
 
+@font-face {
+  font-family: 'Galano Grotesque Alt Semi-Bold';
+  src: url(assets/fonts/galano-grotesque-alt-semibold.otf);
+}
+
 a{
   text-decoration: none;
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.container{
+  width: 1250px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 90px;
+  box-sizing: border-box;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: flex;
+}
+
+@media screen and (max-width: 1280px) {
+  .container{
+    width: 100%;
+  }
+}
+
+.container.page-container{
+  margin-top: $headerHeight;
+  background-color: $backgroundColor;
+}
+
+.page-move, /* apply transition to moving elements */
+.page-enter-active,
+.page-leave-active {
+  transition: all 200ms ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+.page-leave-to{
+  transition: all 150ms ease;
+}
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+.page-leave-active {
+  position: absolute;
+}
+
+.fade-move, /* apply transition to moving elements */
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 400ms ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+.fade-leave-active {
+  position: absolute;
+}
+
 </style>

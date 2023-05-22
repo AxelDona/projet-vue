@@ -1,0 +1,11 @@
+$headerHeight: 75px;
+$pageHeight : calc(100vh - $headerHeight);
+$backgroundColor : #ffffff;
+
+@mixin sectionTitle{
+  margin: 0 2rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 1.8rem;
+  text-align: center;
+}

@@ -1,13 +1,15 @@
 <template>
   <header>
-    <div class="header-left">
-      <img src="../assets/img/icon/girondins-logo.svg" class="header-logo" alt="">
-      <span>FC Girondins de Bordeaux</span>
+    <div class="container">
+      <router-link to="/" class="header-left">
+        <img src="../assets/img/icon/girondins-logo.svg" class="header-logo" alt="">
+        <span class="title">FC Girondins<br/> de Bordeaux</span>
+      </router-link>
+      <nav>
+        <router-link to="/">Effectif professionnel</router-link>
+      </nav>
+      <div class="header-right"></div>
     </div>
-    <nav>
-      <router-link to="/">Effectif professionnel</router-link>
-    </nav>
-    <div class="header-right"></div>
   </header>
 </template>
 
@@ -19,33 +21,60 @@ export default {
 
 <style lang="scss" scoped>
 
-$headerHeight: 75px;
-
 header{
   width: 100%;
   height: $headerHeight;
   background-color: #2c3e50;
   color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 2000;
 
-  .header-left{
-    width: 200px;
-    height: $headerHeight;
+  .container{
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     align-items: center;
 
-    .header-logo{
-      height: 60px;
-      margin-left: 15px;
+    .header-left{
+      width: 200px;
+      height: $headerHeight;
+      display: flex;
+      justify-content: left;
+      align-items: center;
+
+      .title{
+        text-transform: uppercase;
+        font-weight: 700;
+        text-decoration: none;
+        color: #ffffff;
+      }
+
+      .header-logo{
+        height: 60px;
+        margin-left: 15px;
+      }
+    }
+
+    .header-right{
+      width: 200px;
+    }
+
+    nav{
+
+      a{
+        font-weight: 700;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 0 20px;
+      }
+
+      a:hover{
+        text-decoration: underline;
+      }
     }
   }
 
-  .header-right{
-    width: 200px;
-  }
+
 
 
 }

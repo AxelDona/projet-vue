@@ -19,16 +19,17 @@ const routes = [
 
 const router = createRouter({
 	history: createWebHistory(),
-	routes
+	routes,
+	scrollBehavior(to) {
+	if (to.hash) {
+		return {
+			selector: to.hash,
+			behavior: 'smooth'
+		};
+	}
+	return { top: 0 }
+},
 });
 
-router.beforeEach((to, from, next) =>{
-	let documentTitle = `${process.env.VUE_APP_TITLE} - ${to.name}`;
-	if (to.params.title){
-		documentTitle += ` - ${to.params.title}`
-	}
-	document.title = documentTitle;
-	next();
-})
 
 export default router;

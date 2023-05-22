@@ -1,40 +1,66 @@
 <template>
   <div id="container">
-    <select v-model="sortOption">
-      <option value="position">Trier par poste</option>
-      <option value="lastname">Trier par nom</option>
-      <option value="number">Trier par numéro</option>
-    </select>
-    <div v-show="sortOption !== 'position'" class="filters-container">
-      <button @click="clearFilters">Clear</button>
-      <input type="text" v-model="search" placeholder="Chercher un joueur..." />
-      <div class="nationality-buttons">
-        <button
-            v-for="nationality in nationalitiesCount"
-            :key="nationality.name"
-            :class="{ active: isSelectedNationality(nationality.name) }"
-            @click="toggleNationality(nationality.name)"
-        >
-          {{ nationality.name }} ({{ nationality.count }})
-        </button>
-      </div>
-      <div class="position-buttons">
-        <button
-            v-for="position in positions"
-            :key="position"
-            :class="{ active: selectedPositions.includes(position) }"
-            @click="togglePosition(position)"
-        >
-          {{ position }}
-        </button>
-      </div>
-      <span>{{filteredPlayers.length}} joueurs</span>
+    <div v-if="isLoading">
+      <!-- Page de chargement -->
+      <p>Loading...</p>
     </div>
+    <div v-else>
+      <select v-model="sortOption">
+        <option value="position">Trier par poste</option>
+        <option value="lastname">Trier par nom</option>
+        <option value="number">Trier par numéro</option>
+      </select>
+      <div v-show="sortOption !== 'position'" class="filters-container">
+        <button @click="clearFilters">Clear</button>
+        <input type="text" v-model="search" placeholder="Chercher un joueur..." />
+        <div class="nationality-buttons">
+          <button
+              v-for="nationality in nationalitiesCount"
+              :key="nationality.name"
+              :class="{ active: isSelectedNationality(nationality.name) }"
+              @click="toggleNationality(nationality.name)"
+          >
+            {{ nationality.name }} ({{ nationality.count }})
+          </button>
+        </div>
+        <div class="position-buttons">
+          <button
+              v-for="position in positions"
+              :key="position"
+              :class="{ active: selectedPositions.includes(position) }"
+              @click="togglePosition(position)"
+          >
+            {{ position }}
+          </button>
+        </div>
+        <span>{{filteredPlayers.length}} joueurs</span>
+      </div>
 
-    <div v-show="sortOption !== 'position'" class="cards-container">
-      <transition-group name="list">
+      <div v-show="sortOption !== 'position'" class="cards-container">
+        <transition-group name="list">
+          <PlayerCard
+              v-for="playerData in filteredPlayers"
+              v-bind:key="playerData.player.id"
+              :id="playerData.player.id"
+              :name="playerData.player.name"
+              :firstnameShort="playerData.player.firstnameShort"
+              :lastnameShort="playerData.player.lastnameShort"
+              :age="playerData.player.age"
+              :height="playerData.player.height"
+              :weight="playerData.player.weight"
+              :number="playerData.player.number"
+          />
+        </transition-group>
+      </div>
+
+      <div v-show="sortOption === 'position'" class="position-title">
+        <div></div>
+        <h2>Gardiens</h2>
+        <div></div>
+      </div>
+      <div v-show="sortOption === 'position'" class="cards-container">
         <PlayerCard
-            v-for="playerData in filteredPlayers"
+            v-for="playerData in playersByPosition('Goalkeeper')"
             v-bind:key="playerData.player.id"
             :id="playerData.player.id"
             :name="playerData.player.name"
@@ -45,92 +71,72 @@
             :weight="playerData.player.weight"
             :number="playerData.player.number"
         />
-      </transition-group>
-    </div>
+      </div>
 
-    <div v-show="sortOption === 'position'" class="position-title">
-      <div></div>
-      <h2>Gardiens</h2>
-      <div></div>
-    </div>
-    <div v-show="sortOption === 'position'" class="cards-container">
-      <PlayerCard
-          v-for="playerData in playersByPosition('Goalkeeper')"
-          v-bind:key="playerData.player.id"
-          :id="playerData.player.id"
-          :name="playerData.player.name"
-          :firstnameShort="playerData.player.firstnameShort"
-          :lastnameShort="playerData.player.lastnameShort"
-          :age="playerData.player.age"
-          :height="playerData.player.height"
-          :weight="playerData.player.weight"
-          :number="playerData.player.number"
-      />
-    </div>
+      <div v-show="sortOption === 'position'" class="position-title">
+        <div></div>
+        <h2>Défenseurs</h2>
+        <div></div>
+      </div>
+      <div v-show="sortOption === 'position'" class="cards-container">
+        <PlayerCard
+            v-for="playerData in playersByPosition('Defender')"
+            v-bind:key="playerData.player.id"
+            :id="playerData.player.id"
+            :name="playerData.player.name"
+            :firstnameShort="playerData.player.firstnameShort"
+            :lastnameShort="playerData.player.lastnameShort"
+            :age="playerData.player.age"
+            :height="playerData.player.height"
+            :weight="playerData.player.weight"
+            :number="playerData.player.number"
+        />
+      </div>
 
-    <div v-show="sortOption === 'position'" class="position-title">
-      <div></div>
-      <h2>Défenseurs</h2>
-      <div></div>
-    </div>
-    <div v-show="sortOption === 'position'" class="cards-container">
-      <PlayerCard
-          v-for="playerData in playersByPosition('Defender')"
-          v-bind:key="playerData.player.id"
-          :id="playerData.player.id"
-          :name="playerData.player.name"
-          :firstnameShort="playerData.player.firstnameShort"
-          :lastnameShort="playerData.player.lastnameShort"
-          :age="playerData.player.age"
-          :height="playerData.player.height"
-          :weight="playerData.player.weight"
-          :number="playerData.player.number"
-      />
-    </div>
+      <div v-show="sortOption === 'position'" class="position-title">
+        <div></div>
+        <h2>Milieux</h2>
+        <div></div>
+      </div>
+      <div v-show="sortOption === 'position'" class="cards-container">
+        <PlayerCard
+            v-for="playerData in playersByPosition('Midfielder')"
+            v-bind:key="playerData.player.id"
+            :id="playerData.player.id"
+            :name="playerData.player.name"
+            :firstnameShort="playerData.player.firstnameShort"
+            :lastnameShort="playerData.player.lastnameShort"
+            :age="playerData.player.age"
+            :height="playerData.player.height"
+            :weight="playerData.player.weight"
+            :number="playerData.player.number"
+        />    </div>
 
-    <div v-show="sortOption === 'position'" class="position-title">
-      <div></div>
-      <h2>Milieux</h2>
-      <div></div>
-    </div>
-    <div v-show="sortOption === 'position'" class="cards-container">
-      <PlayerCard
-          v-for="playerData in playersByPosition('Midfielder')"
-          v-bind:key="playerData.player.id"
-          :id="playerData.player.id"
-          :name="playerData.player.name"
-          :firstnameShort="playerData.player.firstnameShort"
-          :lastnameShort="playerData.player.lastnameShort"
-          :age="playerData.player.age"
-          :height="playerData.player.height"
-          :weight="playerData.player.weight"
-          :number="playerData.player.number"
-      />    </div>
-
-    <div v-show="sortOption === 'position'" class="position-title">
-      <div></div>
-      <h2>Attaquants</h2>
-      <div></div>
-    </div>
-    <div v-show="sortOption === 'position'" class="cards-container">
-      <PlayerCard
-          v-for="playerData in playersByPosition('Attacker')"
-          v-bind:key="playerData.player.id"
-          :id="playerData.player.id"
-          :name="playerData.player.name"
-          :firstnameShort="playerData.player.firstnameShort"
-          :lastnameShort="playerData.player.lastnameShort"
-          :age="playerData.player.age"
-          :height="playerData.player.height"
-          :weight="playerData.player.weight"
-          :number="playerData.player.number"
-      />
+      <div v-show="sortOption === 'position'" class="position-title">
+        <div></div>
+        <h2>Attaquants</h2>
+        <div></div>
+      </div>
+      <div v-show="sortOption === 'position'" class="cards-container">
+        <PlayerCard
+            v-for="playerData in playersByPosition('Attacker')"
+            v-bind:key="playerData.player.id"
+            :id="playerData.player.id"
+            :name="playerData.player.name"
+            :firstnameShort="playerData.player.firstnameShort"
+            :lastnameShort="playerData.player.lastnameShort"
+            :age="playerData.player.age"
+            :height="playerData.player.height"
+            :weight="playerData.player.weight"
+            :number="playerData.player.number"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import PlayerCard from "@/components/PlayerCard";
+import PlayerCard from "@/components/PlayerCard.vue";
 import AdditionalInfo from "@/assets/json/additional-info.json";
 
 export default {
@@ -145,8 +151,16 @@ export default {
       selectedPositions: [],
     };
   },
-  created: function () {
-    this.getFCGBPlayers();
+  created: async function() {
+    if (this.isCacheValid()) {
+      const cachedPlayers = sessionStorage.getItem('fcgbPlayers');
+      if (cachedPlayers) {
+        this.players = JSON.parse(cachedPlayers);
+        return;
+      }
+    }
+
+    await this.getFCGBPlayers();
   },
   computed: {
     positions() {
@@ -225,6 +239,13 @@ export default {
   },
   methods: {
     async getFCGBPlayers() {
+      // Vérifier si les données sont déjà présentes dans le cache de session
+      const cachedPlayers = sessionStorage.getItem('fcgbPlayers');
+      if (cachedPlayers) {
+        this.players = JSON.parse(cachedPlayers);
+        return;
+      }
+
       const options = {
         method: "GET",
         headers: {
@@ -236,6 +257,7 @@ export default {
       let allPlayers = [];
       let page = 1;
       let totalPages = 1;
+
 
       while (page <= totalPages) {
         let response = await fetch(
@@ -265,6 +287,13 @@ export default {
       });
 
       this.players = filteredPlayers;
+
+      // Stocker les joueurs dans le cache de session
+      sessionStorage.setItem('fcgbPlayers', JSON.stringify(filteredPlayers));
+
+      // Définir une expiration pour les données en minutes (par exemple, 5 minutes)
+      const expirationTime = new Date().getTime() + 5 * 60 * 1000;
+      sessionStorage.setItem('fcgbPlayersExpiration', expirationTime);
     },
     isSelectedNationality(nationality) {
       return this.selectedNationalities.includes(nationality);
@@ -299,6 +328,15 @@ export default {
           .replace(/[\u017a\u0179]/g, "z") // z avec accent aigu
           .replace(/[\u017c\u017b]/g, "z"); // z avec point
     },
+    isCacheValid() {
+      const expirationTime = sessionStorage.getItem('fcgbPlayersExpiration');
+      if (!expirationTime) {
+        return false;
+      }
+
+      const currentTime = new Date().getTime();
+      return currentTime < parseInt(expirationTime);
+    }
   },
 };
 </script>

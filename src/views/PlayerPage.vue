@@ -1,5 +1,7 @@
 <template>
-  <PlayerInfo/>
+  <div class="container page-container">
+    <PlayerInfo/>
+  </div>
 </template>
 
 <script>
