@@ -243,7 +243,7 @@ export default {
   },
   methods: {
     async getFCGBPlayers() {
-      // Vérifier si les données sont déjà présentes dans le cache de session
+
       const cachedPlayers = sessionStorage.getItem('fcgbPlayers');
       if (cachedPlayers) {
         this.players = JSON.parse(cachedPlayers);
@@ -275,12 +275,10 @@ export default {
         totalPages = response.paging.total;
       }
 
-      // Filtrer les joueurs en utilisant l'ID du fichier JSON
       const filteredPlayers = allPlayers.filter((player) => {
         return AdditionalInfo.some((jsonPlayer) => jsonPlayer.id === player.player.id);
       });
 
-      // Ajouter les informations du fichier JSON aux joueurs filtrés
       filteredPlayers.forEach((player) => {
         const jsonPlayer = AdditionalInfo.find(
             (jsonPlayer) => jsonPlayer.id === player.player.id
@@ -292,10 +290,8 @@ export default {
 
       this.players = filteredPlayers;
 
-      // Stocker les joueurs dans le cache de session
       sessionStorage.setItem('fcgbPlayers', JSON.stringify(filteredPlayers));
 
-      // Définir une expiration pour les données en minutes (par exemple, 5 minutes)
       const expirationTime = new Date().getTime() + 5 * 60 * 1000;
       sessionStorage.setItem('fcgbPlayersExpiration', expirationTime);
     },
@@ -380,7 +376,7 @@ export default {
     }
   }
 
-  .list-move, /* apply transition to moving elements */
+  .list-move,
   .list-enter-active,
   .list-leave-active {
     transition: all 200ms ease;
@@ -392,8 +388,6 @@ export default {
     transform: translateX(30px);
   }
 
-  /* ensure leaving items are taken out of layout flow so that moving
-     animations can be calculated correctly. */
   .list-leave-active {
     position: absolute;
   }

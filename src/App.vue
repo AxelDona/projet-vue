@@ -73,7 +73,7 @@ a{
   background-color: $backgroundColor;
 }
 
-.page-move, /* apply transition to moving elements */
+.page-move,
 .page-enter-active,
 .page-leave-active {
   transition: all 200ms ease;
@@ -89,13 +89,11 @@ a{
   transition: all 150ms ease;
 }
 
-/* ensure leaving items are taken out of layout flow so that moving
-   animations can be calculated correctly. */
 .page-leave-active {
   position: absolute;
 }
 
-.fade-move, /* apply transition to moving elements */
+.fade-move,
 .fade-enter-active,
 .fade-leave-active {
   transition: all 400ms ease;
@@ -106,8 +104,7 @@ a{
   opacity: 0;
 }
 
-/* ensure leaving items are taken out of layout flow so that moving
-   animations can be calculated correctly. */
+
 .fade-leave-active {
   position: absolute;
 }

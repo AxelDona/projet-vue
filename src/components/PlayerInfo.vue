@@ -163,7 +163,7 @@ export default {
     async getFCGBPlayers(){
 
       try {
-        this.isLoading = true; // Définit isLoading sur true pour afficher la page de chargement
+        this.isLoading = true;
 
         let fullResponse = await axios.get('https://api-football-v1.p.rapidapi.com/v3/players?id=' + this.id + '&season=2022', {
           headers: {
@@ -194,10 +194,10 @@ export default {
           this.player.number = "";
         }
 
-        this.isLoading = false; // Définit isLoading sur false pour afficher le contenu de la page
+        this.isLoading = false;
       } catch (error) {
         console.error(error);
-        this.isLoading = false; // Définit isLoading sur false en cas d'erreur pour afficher le contenu partiel de la page
+        this.isLoading = false;
       }
     }
   }
