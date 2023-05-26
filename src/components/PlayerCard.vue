@@ -6,7 +6,7 @@
         <h3 class="player-lastName">{{lastnameShort}}</h3>
       </div>
       <div class="player-card-gradient"></div>
-      <img :src="require('../assets/img/player-cards/'+id+'-card.png')" alt="" class="player-card-player-picture">
+      <img :src="'https://axeldona.com/girondins-img/player-cards/'+id+'-card.png'" alt="" class="player-card-player-picture">
       <span class="player-card-player-number">{{number}}</span>
       <div class="player-card-scapulaire-container">
         <img src="../assets/img/player-cards/scapulaire.svg" alt="">

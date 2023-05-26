@@ -67,7 +67,7 @@
 
     <Transition name="player-pic">
       <div v-if="!isLoading" class="player-picture-container">
-        <img :src="require('../assets/img/player-page/'+id+'-p.png')" class="player-picture" alt="">
+        <img :src="'https://axeldona.com/girondins-img/player-page/'+id+'-p.png'" class="player-picture" alt="">
       </div>
     </Transition>
 
