@@ -31,6 +31,16 @@ export default {
   src: url(assets/fonts/galano-grotesque-alt-semibold.otf);
 }
 
+@font-face {
+  font-family: 'Ageo Semi-Bold';
+  src: url(assets/fonts/ageo-semibold.otf);
+}
+
+@font-face {
+  font-family: 'Ageo Extra-Bold';
+  src: url(assets/fonts/ageo-extrabold.otf);
+}
+
 a{
   text-decoration: none;
 }
@@ -39,13 +49,13 @@ a{
   font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: $dark;
 }
 
 .container{
   width: 1250px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 90px;
   box-sizing: border-box;
   padding-left: 15px;
   padding-right: 15px;

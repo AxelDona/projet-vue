@@ -24,7 +24,7 @@ export default {
 header{
   width: 100%;
   height: $headerHeight;
-  background-color: #2c3e50;
+  background-color: $girondinsColor;
   color: white;
   position: fixed;
   top: 0;
@@ -41,10 +41,11 @@ header{
       display: flex;
       justify-content: left;
       align-items: center;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-family: 'Ageo Extra-Bold', sans-serif;
 
       .title{
-        text-transform: uppercase;
-        font-weight: 700;
         text-decoration: none;
         color: #ffffff;
       }
@@ -62,10 +63,12 @@ header{
     nav{
 
       a{
-        font-weight: 700;
         color: #ffffff;
         text-decoration: none;
         padding: 0 20px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        font-family: 'Ageo Semi-Bold', sans-serif;
       }
 
       a:hover{
@@ -73,10 +76,13 @@ header{
       }
     }
   }
+}
 
-
-
-
+@media screen and (max-width: 1080px) {
+  .header-right{
+    display: none;
+    text-align: right;
+  }
 }
 
 </style>

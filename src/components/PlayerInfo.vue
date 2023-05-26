@@ -235,7 +235,7 @@ export default {
         text-decoration: none;
         text-transform: uppercase;
         letter-spacing: 0.3rem;
-        color: #2c2c34;
+        color: $lightGray3;
         padding-top: 20px;
         padding-bottom: 20px;
         padding-right: 15px;
@@ -267,7 +267,7 @@ export default {
           color: rgba(255, 255, 255, 0);
           -webkit-text-fill-color: rgba(255, 255, 255, 0); /* Will override color (regardless of order) */
           -webkit-text-stroke-width: 2px;
-          -webkit-text-stroke-color: #dedfe5;
+          -webkit-text-stroke-color: $lightGray1;
         }
       }
 
@@ -343,7 +343,7 @@ export default {
 
         div{
           height: 1px;
-          background-color: #b9bfcb;
+          background-color: $lightGray3;
           border: 0;
           flex: 1;
         }
@@ -370,7 +370,7 @@ export default {
 
             hr{
               height: 0.7px;
-              background-color: #b9bfcb;
+              background-color: $lightGray3;
               border: 0;
               box-sizing: border-box;
               margin-left: 140px;

@@ -5,53 +5,57 @@
       <p>Loading...</p>
     </div>
     <div v-else>
-      <select v-model="sortOption">
-        <option value="position">Trier par poste</option>
-        <option value="lastname">Trier par nom</option>
-        <option value="number">Trier par numéro</option>
-      </select>
-      <div v-show="sortOption !== 'position'" class="filters-container">
-        <button @click="clearFilters">Clear</button>
-        <input type="text" v-model="search" placeholder="Chercher un joueur..." />
-        <div class="nationality-buttons">
-          <button
-              v-for="nationality in nationalitiesCount"
-              :key="nationality.name"
-              :class="{ active: isSelectedNationality(nationality.name) }"
-              @click="toggleNationality(nationality.name)"
-          >
-            {{ nationality.name }} ({{ nationality.count }})
-          </button>
-        </div>
-        <div class="position-buttons">
-          <button
-              v-for="position in positions"
-              :key="position"
-              :class="{ active: selectedPositions.includes(position) }"
-              @click="togglePosition(position)"
-          >
-            {{ position }}
-          </button>
-        </div>
-        <span>{{filteredPlayers.length}} joueurs</span>
+      <div class="select-container">
+        <select v-model="sortOption">
+          <option value="position">Trier par poste</option>
+          <option value="lastname">Trier par nom</option>
+          <option value="number">Trier par numéro</option>
+        </select>
       </div>
+      <Transition name="filters">
+        <div v-show="sortOption !== 'position'" class="filters-container">
+          <button @click="clearFilters">Clear</button>
+          <input type="text" v-model="search" placeholder="Chercher un joueur..." />
+          <div class="nationality-buttons">
+            <button
+                v-for="nationality in nationalitiesCount"
+                :key="nationality.name"
+                :class="{ active: isSelectedNationality(nationality.name) }"
+                @click="toggleNationality(nationality.name)"
+            >
+              {{ nationality.name }} ({{ nationality.count }})
+            </button>
+          </div>
+          <div class="position-buttons">
+            <button
+                v-for="position in positions"
+                :key="position"
+                :class="{ active: selectedPositions.includes(position) }"
+                @click="togglePosition(position)"
+            >
+              {{ position }}
+            </button>
+          </div>
+          <span>{{filteredPlayers.length}} joueurs</span>
+        </div>
+      </Transition>
 
-      <div v-show="sortOption !== 'position'" class="cards-container">
-        <transition-group name="list">
-          <PlayerCard
-              v-for="playerData in filteredPlayers"
-              v-bind:key="playerData.player.id"
-              :id="playerData.player.id"
-              :name="playerData.player.name"
-              :firstnameShort="playerData.player.firstnameShort"
-              :lastnameShort="playerData.player.lastnameShort"
-              :age="playerData.player.age"
-              :height="playerData.player.height"
-              :weight="playerData.player.weight"
-              :number="playerData.player.number"
-          />
-        </transition-group>
-      </div>
+        <div v-show="sortOption !== 'position'" class="cards-container">
+          <transition-group name="list">
+            <PlayerCard
+                v-for="playerData in filteredPlayers"
+                v-bind:key="playerData.player.id"
+                :id="playerData.player.id"
+                :name="playerData.player.name"
+                :firstnameShort="playerData.player.firstnameShort"
+                :lastnameShort="playerData.player.lastnameShort"
+                :age="playerData.player.age"
+                :height="playerData.player.height"
+                :weight="playerData.player.weight"
+                :number="playerData.player.number"
+            />
+          </transition-group>
+        </div>
 
       <div v-show="sortOption === 'position'" class="position-title">
         <div></div>
@@ -361,8 +365,8 @@ export default {
     padding-bottom: 2rem;
 
     div{
-      height: 1px;
-      background-color: #b9bfcb;
+      height: 0.8px;
+      background-color: $lightGray3;
       border: 0;
       flex: 1;
     }
@@ -397,4 +401,19 @@ export default {
   .active{
     background-color: red;
   }
+
+  .filters-enter-active {
+    transition: all 300ms ease-out;
+  }
+
+  .filters-leave-active {
+    transition: all 300ms ease-in-out;
+  }
+
+  .filters-enter-from,
+  .filters-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
 </style>
