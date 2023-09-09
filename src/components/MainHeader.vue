@@ -3,10 +3,10 @@
     <div class="container">
       <router-link to="/" class="header-left">
         <img src="../assets/img/icon/girondins-logo.svg" class="header-logo" alt="">
-        <span class="title">FC Girondins<br/> de Bordeaux</span>
+        <span class="title"></span>
       </router-link>
       <nav>
-        <router-link to="/">Effectif professionnel</router-link>
+        <router-link to="/">Effectif professionnel - Saison 2022/2023</router-link>
       </nav>
       <div class="header-right"></div>
     </div>
@@ -24,11 +24,11 @@ export default {
 header{
   width: 100%;
   height: $headerHeight;
-  background-color: $girondinsColor;
-  color: white;
+  background-color: $backgroundColor;
   position: fixed;
   top: 0;
-  z-index: 2000;
+  z-index: 20000;
+  box-shadow: 0px 10px 12px -10px rgba(0,0,0,0.1);
 
   .container{
     display: flex;
@@ -47,7 +47,7 @@ header{
 
       .title{
         text-decoration: none;
-        color: #ffffff;
+        color: $textColor1;
       }
 
       .header-logo{
@@ -63,12 +63,13 @@ header{
     nav{
 
       a{
-        color: #ffffff;
         text-decoration: none;
         padding: 0 20px;
         text-transform: uppercase;
-        font-size: 0.8rem;
-        font-family: 'Ageo Semi-Bold', sans-serif;
+        font-size: 1.2rem;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 600;
+        color: $textColor1;
       }
 
       a:hover{

@@ -71,25 +71,26 @@ a{
 .container.page-container{
   margin-top: $headerHeight;
   background-color: $backgroundColor;
+  position: relative;
 }
 
 .page-move,
 .page-enter-active,
 .page-leave-active {
-  transition: all 200ms ease;
+  transition: all 400ms ease;
 }
 
 .page-enter-from,
 .page-leave-to {
   opacity: 0;
-  transform: translateX(-100px);
+  //transform: translateX(-100px);
 }
 
 .page-leave-to{
   transition: all 150ms ease;
 }
 
-.page-leave-active {
+.page-leave-active{
   position: absolute;
 }
 

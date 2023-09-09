@@ -6,9 +6,9 @@
       </div>
     </Transition>
 
-    <Transition name="player-info">
+    <Transition name="player-info" appear>
       <div v-if="!isLoading" class="player-info-container">
-        <router-link class="back-link" :to="{path:'/', hash:'#'+id, }">Retour</router-link>
+        <router-link class="back-link" :to="{path:'/', hash:'#'+positionTag, }"><font-awesome-icon icon="fa-solid fa-chevron-left" class="chevron-left" /> Retour</router-link>
 
         <h1 v-if="player.firstnameShort===''" class="player-name">{{player.lastnameShort}}
           <p class="player-number">{{player.number}}</p>
@@ -17,10 +17,7 @@
           <p class="player-number">{{player.number}}</p>
         </h1>
 
-        <p class="player-position" v-if="statsLeague.games.position === 'Goalkeeper'">Gardien</p>
-        <p class="player-position" v-if="statsLeague.games.position === 'Defender'">Défenseur</p>
-        <p class="player-position" v-if="statsLeague.games.position === 'Midfielder'">Milieu</p>
-        <p class="player-position" v-if="statsLeague.games.position === 'Attacker'">Attaquant</p>
+        <p class="player-position">{{statsLeague.games.position}}</p>
 
         <table class="player-info-table">
           <tr>
@@ -36,7 +33,7 @@
             </td>
             <td>
               <span class="info-label">Nationalité sportive</span>
-              <p class="info-value">{{player.nationality}}</p>
+              <p class="info-value"><span v-if="player.flag" class="nationality-flag">{{player.flag}}</span>{{player.nationality}}</p>
 
             </td>
           </tr>
@@ -45,9 +42,10 @@
               <span class="info-label">Né le </span>
               <p class="info-value">{{player.birth.date}}</p>
             </td>
-            <td>
+            <td v-if="player.birth.place">
               <span class="info-label"> à </span>
-              <p class="info-value">{{player.birth.place}} ({{player.birth.country}})</p>
+              <p v-if="player.birth.country === 'France'" class="info-value">{{player.birth.place}}</p>
+              <p v-else class="info-value">{{player.birth.place}} ({{player.birth.country}})</p>
             </td>
           </tr>
           <tr>
@@ -65,75 +63,72 @@
       </div>
     </Transition>
 
-    <Transition name="player-pic">
+    <Transition name="player-pic" appear>
       <div v-if="!isLoading" class="player-picture-container">
         <img :src="'https://axeldona.com/girondins-img/player-page/'+id+'-p.png'" class="player-picture" alt="">
       </div>
     </Transition>
 
-    <Transition name="player-stats">
+    <Transition name="player-stats" appear>
       <div v-if="!isLoading" class="player-stats-container">
         <div class="league-title">
-          <div></div>
-          <img class="ligue2-logo" src=../assets/img/icon/ligue2-logo.svg>
-          <div></div>
+          <span @click="getPreviousCompetition" class="competition-button previous"><font-awesome-icon icon="fa-solid fa-chevron-left" class="league-selection-chevron" /></span>
+          <div @click="getPreviousCompetition"></div>
+          <img v-show="allCompetitions[currentCompetition].league.id === 62" class="ligue2-logo" src="../assets/img/icon/ligue2-logo.svg">
+          <img v-show="allCompetitions[currentCompetition].league.id === 66" class="ligue2-logo" src="../assets/img/icon/cdf-logo.svg">
+          <div @click="getNextCompetition"></div>
+          <span @click="getNextCompetition" class="competition-button next"><font-awesome-icon icon="fa-solid fa-chevron-right" class="league-selection-chevron" /></span>
         </div>
-        <table class="league-stats-table">
-          <tr>
-            <td class="stat-label">Matchs joués</td>
-            <td class="stat-value">{{statsLeague.games.appearences}}</td>
-          </tr>
-          <tr>
-            <td class="stat-label">Dont titulaire</td>
-            <td class="stat-value">{{statsLeague.games.lineups}}</td>
-          </tr>
-          <tr><td colspan="2"><hr></td></tr>
-          <tr>
-            <td class="stat-label">Temps de jeu total (minutes)</td>
-            <td v-if="statsLeague.games.minutes === 0" class="stat-value">{{statsLeague.games.minutes}}</td>
-            <td v-else class="stat-value">{{statsLeague.games.minutes}}</td>
-          </tr>
-          <tr><td colspan="2"><hr></td></tr>
-          <tr>
-            <td class="stat-label">Buts</td>
-            <td class="stat-value">{{statsLeague.goals.total}}</td>
-          </tr>
-          <tr>
-            <td class="stat-label">Passes décisives</td>
-            <td v-if="!statsLeague.goals.assists" class="stat-value">0</td>
-            <td v-else class="stat-value">{{statsLeague.goals.assists}}</td>
-          </tr>
-          <tr><td colspan="2"><hr></td></tr>
-          <tr v-if="statsLeague.games.position === 'Goalkeeper'">
-            <td class="stat-label">Arrêts</td>
-            <td v-if="statsLeague.goals.saves" class="stat-value">{{statsLeague.goals.saves}}</td>
-            <td v-else class="stat-value">0</td>
-          </tr>
-          <tr v-if="statsLeague.games.position === 'Goalkeeper'">
-            <td class="stat-label">Buts encaissés</td>
-            <td class="stat-value">{{statsLeague.goals.conceded}}</td>
-          </tr>
-          <tr v-if="statsLeague.games.position === 'Goalkeeper'"><td colspan="2"><hr></td></tr>
-          <tr>
-            <td class="stat-label">Entré en cours de jeu</td>
-            <td class="stat-value">{{statsLeague.substitutes.in}}</td>
-          </tr>
-          <tr>
-            <td class="stat-label">Remplacé en cours de jeu</td>
-            <td class="stat-value">{{statsLeague.substitutes.out}}</td>
-          </tr>
-          <tr><td colspan="2"><hr></td></tr>
-          <tr>
-            <td class="stat-label">Tirs</td>
-            <td v-if="!statsLeague.shots.total" class="stat-value">0</td>
-            <td v-else class="stat-value">{{statsLeague.shots.total}}</td>
-          </tr>
-          <tr>
-            <td class="stat-label">dont cadrés</td>
-            <td v-if="!statsLeague.shots.on" class="stat-value">0</td>
-            <td v-else class="stat-value">{{statsLeague.shots.on}}</td>
-          </tr>
-        </table>
+        <Transition :name="'stats-swipe-'+statsDirection">
+          <table :key="currentLeagueID" class="league-stats-table">
+            <tr>
+              <td class="stat-label">Matchs joués</td>
+              <td class="stat-value">{{allCompetitions[currentCompetition].games.appearences}}</td>
+            </tr>
+            <tr>
+              <td class="stat-label">Dont titulaire</td>
+              <td class="stat-value">{{allCompetitions[currentCompetition].games.lineups}}</td>
+            </tr>
+            <tr><td colspan="2"><hr></td></tr>
+            <tr>
+              <td class="stat-label">Temps de jeu total (minutes)</td>
+              <td v-if="allCompetitions[currentCompetition].games.minutes === 0" class="stat-value">{{allCompetitions[currentCompetition].games.minutes}}</td>
+              <td v-else class="stat-value">{{allCompetitions[currentCompetition].games.minutes}}</td>
+            </tr>
+            <tr><td colspan="2"><hr></td></tr>
+            <tr>
+              <td class="stat-label">Buts</td>
+              <td class="stat-value">{{allCompetitions[currentCompetition].goals.total}}</td>
+            </tr>
+            <tr>
+              <td class="stat-label">Passes décisives</td>
+              <td v-if="!allCompetitions[currentCompetition].goals.assists" class="stat-value">0</td>
+              <td v-else class="stat-value">{{allCompetitions[currentCompetition].goals.assists}}</td>
+            </tr>
+            <tr><td colspan="2"><hr></td></tr>
+            <tr>
+              <td class="stat-label">Tirs</td>
+              <td v-if="!allCompetitions[currentCompetition].shots.total" class="stat-value">0</td>
+              <td v-else class="stat-value">{{allCompetitions[currentCompetition].shots.total}}</td>
+            </tr>
+            <tr>
+              <td class="stat-label">dont cadrés</td>
+              <td v-if="!allCompetitions[currentCompetition].shots.on" class="stat-value">0</td>
+              <td v-else class="stat-value">{{allCompetitions[currentCompetition].shots.on}}</td>
+            </tr>
+            <tr v-if="allCompetitions[currentCompetition].games.position === 'Goalkeeper'"><td colspan="2"><hr></td></tr>
+            <tr v-if="allCompetitions[currentCompetition].games.position === 'Goalkeeper'">
+              <td class="stat-label">Arrêts</td>
+              <td v-if="allCompetitions[currentCompetition].goals.saves" class="stat-value">{{allCompetitions[currentCompetition].goals.saves}}</td>
+              <td v-else class="stat-value">0</td>
+            </tr>
+            <tr v-if="allCompetitions[currentCompetition].games.position === 'Goalkeeper'">
+              <td class="stat-label">Buts encaissés</td>
+              <td v-if="allCompetitions[currentCompetition].goals.conceded" class="stat-value">{{allCompetitions[currentCompetition].goals.conceded}}</td>
+              <td v-else class="stat-value">0</td>
+            </tr>
+          </table>
+        </Transition>
       </div>
     </Transition>
 
@@ -141,8 +136,7 @@
 </template>
 
 <script>
-import AdditionalInfo from "@/assets/json/additional-info.json";
-import axios from 'axios';
+import allPlayers from "@/assets/json/players.json";
 import LoadingAnimation from "@/components/LoadingAnimation.vue";
 
 export default {
@@ -152,7 +146,14 @@ export default {
     return{
       player: [],
       id : this.$route.params.id,
+      positionTag : "goalkeepers",
       statsLeague: [],
+      statsCup: [],
+      allCompetitions: [],
+      currentCompetition: 0,
+      currentLeagueID: 62,
+      competitionLogos: [],
+      statsDirection: "right",
       isLoading: true
     }
   },
@@ -165,33 +166,26 @@ export default {
       try {
         this.isLoading = true;
 
-        let fullResponse = await axios.get('https://api-football-v1.p.rapidapi.com/v3/players?id=' + this.id + '&season=2022', {
-          headers: {
-            'X-RapidAPI-Key': '53fef01e3cmsh88ac04d3580cb85p1610d1jsn3405a8d53f6e',
-            'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-          }
-        });
-        let responseData = fullResponse.data;
-
-
-
-        this.player = responseData.response[0].player;
-        let statsGdB = responseData.response[0].statistics.filter(obj => obj.team.id === 78);
-        this.statsLeague = statsGdB.filter(obj => obj.league.id === 62)[0];
-
-
         const playerId = parseInt(this.id);
-        const playerInfo = AdditionalInfo.find(player => player.id === playerId);
+        const playerInfo = allPlayers.find(player => player.player.id === playerId);
 
+        this.player = playerInfo.player;
 
-        if (playerInfo) {
-          this.player.firstnameShort = playerInfo['firstnameShort'];
-          this.player.lastnameShort = playerInfo['lastnameShort'];
-          this.player.number = playerInfo.number;
-        } else {
-          this.player.firstnameShort = "";
-          this.player.lastnameShort = "";
-          this.player.number = "";
+        let statsGdB = playerInfo.statistics.filter(obj => obj.team.id === 78);
+        this.statsLeague = statsGdB.filter(obj => obj.league.id === 62)[0];
+        this.statsCup = statsGdB.filter(obj => obj.league.id === 66)[0];
+
+        this.allCompetitions = [this.statsLeague, this.statsCup];
+        this.competitionLogos = ["ligue2", "cdf"];
+
+        if (this.statsLeague.games.position === "Gardien"){
+          this.positionTag = "goalkeepers";
+        } else if (this.statsLeague.games.position === "Défenseur"){
+          this.positionTag = "defenders";
+        } else if (this.statsLeague.games.position === "Milieu"){
+          this.positionTag = "midfielders";
+        } else if (this.statsLeague.games.position === "Attaquant"){
+          this.positionTag = "forwards";
         }
 
         this.isLoading = false;
@@ -199,6 +193,24 @@ export default {
         console.error(error);
         this.isLoading = false;
       }
+    },
+    getNextCompetition(){
+      if (this.currentCompetition >= this.allCompetitions.length-1){
+        this.currentCompetition = 0;
+      } else {
+        this.currentCompetition ++;
+      }
+      this.statsDirection = "right";
+      this.currentLeagueID = this.allCompetitions[this.currentCompetition].league.id;
+    },
+    getPreviousCompetition(){
+      if (this.currentCompetition === 0){
+        this.currentCompetition = this.allCompetitions.length-1;
+      } else {
+        this.currentCompetition --;
+      }
+      this.statsDirection = "left";
+      this.currentLeagueID = this.allCompetitions[this.currentCompetition].league.id;
     }
   }
 }
@@ -211,8 +223,10 @@ export default {
     justify-content: space-between;
     width: 100%;
     min-height: $pageHeight;
+    padding-top: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
     position: relative;
-    margin-top: 10px;
 
     .loading-screen{
       width: 100%;
@@ -230,12 +244,13 @@ export default {
     }
 
     .player-info-container{
+      padding-bottom: 20px;
 
       .back-link{
         text-decoration: none;
         text-transform: uppercase;
         letter-spacing: 0.3rem;
-        color: $lightGray3;
+        color: $girondinsColor;
         padding-top: 20px;
         padding-bottom: 20px;
         padding-right: 15px;
@@ -243,6 +258,18 @@ export default {
         z-index: 700;
         margin-bottom: 1rem;
         display: block;
+
+        .chevron-left{
+          transition-duration: 200ms;
+        }
+      }
+
+      .back-link:hover{
+
+        .chevron-left{
+          margin-right: 0.3rem;
+          margin-left: 0.4rem;
+        }
       }
 
       .player-name{
@@ -268,6 +295,7 @@ export default {
           -webkit-text-fill-color: rgba(255, 255, 255, 0); /* Will override color (regardless of order) */
           -webkit-text-stroke-width: 2px;
           -webkit-text-stroke-color: $lightGray1;
+          user-select: none;
         }
       }
 
@@ -300,6 +328,10 @@ export default {
           font-weight: 700;
           font-size: 1.1rem;
           font-family: 'Barlow Condensed', sans-serif;
+
+          .nationality-flag{
+            margin-right: 0.4rem;
+          }
         }
       }
     }
@@ -312,7 +344,7 @@ export default {
       align-items: flex-start;
       position: relative;
       z-index: 20;
-      max-height: 1000px;
+      max-height: calc($pageHeight - 10px);
 
       img.player-picture{
         height: 1000px;
@@ -333,6 +365,7 @@ export default {
 
       position: relative;
       z-index: 500;
+      padding-bottom: 20px;
 
       .league-title{
         display: flex;
@@ -340,13 +373,38 @@ export default {
         align-items: center;
         padding-top: 2rem;
         padding-bottom: 2rem;
+        max-height: 80px;
+
+        .competition-button{
+          padding: 10px 22px;
+          cursor: pointer;
+          font-size: 12px;
+
+          &.previous{
+            padding-left: 10px;
+          }
+
+          &.next{
+            padding-right: 10px;
+          }
+        }
 
         div{
           height: 1px;
           background-color: $lightGray3;
           border: 0;
           flex: 1;
+          cursor: pointer;
+          position: relative;
         }
+
+        div:after {
+          content:'';
+          position:absolute;
+          top:-10px; bottom:-10px;
+          left:-10px; right:-10px;
+        }
+
 
         h3{
           @include sectionTitle;
@@ -390,6 +448,7 @@ export default {
             font-size: 1.4rem;
             font-weight: 700;
             text-align: center;
+            min-width: 2.4rem;
           }
         }
       }
@@ -411,24 +470,24 @@ export default {
     opacity: 0;
   }
 
-  .player-pic-enter-active img {
-    transition: all 500ms cubic-bezier(.17,.67,0,1.04);
-    transition-delay: 5000ms;
+  .player-pic-enter-active{
+    transition: all 800ms cubic-bezier(.17,.67,0,1.04);
+    transition-delay: 200ms;
   }
 
-  .player-pic-enter-from img {
-    transform: translateY(50px);
+  .player-pic-enter-from{
+    transform: translateY(70px);
     opacity: 0;
   }
 
   .player-info-enter-active,
   .player-stats-enter-active{
-    transition: all 200ms ease-out;
+    transition: all 400ms ease-out;
   }
 
   .player-info-leave-active,
   .player-stats-leave-active{
-    transition: all 200ms ease-in-out;
+    transition: all 400ms ease-in-out;
   }
 
   .player-info-enter-from,
@@ -441,6 +500,38 @@ export default {
   .player-stats-leave-to {
     opacity: 0;
     transform: translateX(100px);
+  }
+
+  .stats-swipe-left-enter-active,
+  .stats-swipe-right-enter-active{
+    transition: all 300ms ease;
+  }
+
+  .stats-swipe-left-leave-active,
+  .stats-swipe-right-leave-active{
+    transition: all 300ms ease-in-out;
+  }
+
+  .stats-swipe-left-enter-from,
+  .stats-swipe-right-leave-to {
+    transform: translateX(-150px);
+    opacity: 0;
+  }
+
+  .stats-swipe-right-enter-from,
+  .stats-swipe-left-leave-to {
+    transform: translateX(150px);
+    opacity: 0;
+  }
+
+  .stats-swipe-left-enter-active,
+  .stats-swipe-right-enter-active{
+    transition-delay: 150ms;
+  }
+
+  .stats-swipe-right-leave-active,
+  .stats-swipe-left-leave-active{
+    position: absolute;
   }
 
   @media screen and (max-width: 1024px){

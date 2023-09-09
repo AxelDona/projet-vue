@@ -2,11 +2,17 @@ $headerHeight: 75px;
 $pageHeight : calc(100vh - $headerHeight);
 
 $dark: #0a1426;
+$darkLighter: #2b2f3a;
 $lightGray1: #e5e6e9;
 $lightGray2: #dbdce1;
 $lightGray3: #b9bfcb;
 $backgroundColor : #ffffff;
 $girondinsColor : #131734;
+
+$textColor1: #2c3e50;
+$textColorClear: #ffffff;
+
+$errorColor: #bb0d27;
 
 @mixin sectionTitle{
   margin: 0 2rem;
