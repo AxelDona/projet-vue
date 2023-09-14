@@ -18,7 +18,8 @@ const routes = [
 ];
 
 const router = createRouter({
-	history: createWebHistory(),
+	history: createWebHistory(process.env.BASE_URL),
+	base: '/'+process.env.VUE_APP_SUBFOLDER_LOCATION+'/',
 	routes,
 	scrollBehavior(to, savedPosition) {
 	if (to.hash) {
